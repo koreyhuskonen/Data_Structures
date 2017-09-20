@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define MAX_ITEMS 20
+#define MAX_ITEMS 7
 
 template <class type> class orderedList {
 protected:
@@ -51,6 +51,7 @@ public:
         length = 0;
     }
     type getItem(int index){return *items[index];}
+    int getLenth(){return length;}
     bool operator<(const orderedList &ol){
         return length < ol.length;
     }
@@ -91,6 +92,7 @@ class insertHalfway : public orderedList<int> {
 public:
     void addItem(int n){
         int prev = 0, next = 0, *new_item = new int, empty_index = MAX_ITEMS;
+        *new_item = n;
         for(int i = 0; i < MAX_ITEMS; i++){
             if(items[i] && *items[i] >= n){
                 next = i;
@@ -112,6 +114,7 @@ public:
                     i--;
                 }
             } else {
+                if(*items[i] < n) index++;
                 while(temp1){
                     temp2 = items[i+1];
                     items[i+1] = temp1;
@@ -125,7 +128,7 @@ public:
     }
 
     void displayList(){
-        for(int i = 0; i < length; i++){
+        for(int i = 0; i < MAX_ITEMS; i++){
             if(items[i]){
                 cout << i << ": " << *items[i] << endl;
             } else {
@@ -136,18 +139,15 @@ public:
 };
 
 int main(){
-    // orderedList<int> test;
-    // test.addItem(6);
-    // test.addItem(78);
-    // test.addItem(21);
-    // test.displayList();
-
-    startFromEnd newb;
-    newb.addItem(78);
-    newb.addItem(21);
-    newb.addItem(5);
-    newb.addItem(6);
-    newb.displayList();
+    srand(time(NULL));
+    int temp;
+    insertHalfway test;
+    for(int i = 0; i < MAX_ITEMS; i++){
+        temp = rand() % 100;
+        cout << "_____ Adding " << temp << " _____" << endl;
+        test.addItem(temp);
+        test.displayList();
+    }
 
 
 }
