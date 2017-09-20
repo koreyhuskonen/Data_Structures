@@ -1,0 +1,23 @@
+Player: Rob                   |  Score: 0
+Player: Darth                 |  Score: 0
+Player: Martin Garrix         |  Score: 0
+Player: Susan                 |  Score: 25
+Player: Vader                 |  Score: 25
+Player: Oprah                 |  Score: 0
+Player: Mike                  |  Score: 0
+Player: Ike                   |  Score: 0
+Player: Sugar Ray             |  Score: 0
+Player: Money Mayweather      |  Score: 0
+Player: Whoopie Goldberg      |  Score: 0
+Player: Prez Pinto            |  Score: 0
+Player: XJ9                   |  Score: 0
+Player: Bigfoot               |  Score: 50
+Player: Lil Jon               |  Score: 0
+Player: John Milton           |  Score: 0
+Player: Smee                  |  Score: 0
+Player: Rajon                 |  Score: 0
+Player: LeBron James          |  Score: 0
+Player: Gigi Hadid            |  Score: 25
+Player: Isaac Newton (GOAT)   |  Score: 0
+Player: Mahatma               |  Score: 0
+Player: Marky Mark            |  Score: 25
