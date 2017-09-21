@@ -3,7 +3,7 @@
 
 using namespace std;
 
-const int items_to_be_removed = 50, trials = 100;
+const int items_to_be_removed = 10, trials = 100;
 
 int main(){
     srand(time(NULL));
@@ -12,7 +12,7 @@ int main(){
         orderedList<int> list1;
         startFromEnd     list2;
         insertHalfway    list3;
-        for(int i = 0; i < MAX_ITEMS; i++){
+        for(int i = 0; i < MAX_ITEMS; i++){ // MAX_ITEMS defined in lab4.cpp
             temp = rand() % MAX_ITEMS;
             list1.addItem(temp);
             list2.addItem(temp);
@@ -27,11 +27,12 @@ int main(){
             list3.removeItem(temp);
         }
 
-        avg1 += list1.getOps();
+        avg1 += list1.getOps(); // get number of operations required (ops)
         avg2 += list2.getOps();
         avg3 += list3.getOps();
     }
     cout << endl
+         << "Added: " << MAX_ITEMS << "  Deleted: " << items_to_be_removed << "  Trials: " << trials << endl
          << "Version 1 (starting from front) required on average " << avg1/trials << " operations" << endl
          << "Version 2 (starting from back) required on average " << avg2/trials << " operations" << endl
          << "Version 3 (leaving space between) required on average " << avg3/trials << " operations" << endl
