@@ -8,9 +8,10 @@ template <class T> struct node {
 };
 
 template <class T> class olinkedlist {
-    node<T> *head;
+    node<T> *head, **next;
+    int length;
 public:
-    olinkedlist() : head() {}
+    olinkedlist() : head(), next(&head), length(0) {}
     void addItem(T *item){
         node<T> *new_node = new node<T>;
         new_node->info = *item;
@@ -21,23 +22,41 @@ public:
         }
         *temp2 = new_node;
         new_node->next = temp1;
-
-        // if(!head){
-        //     head = new_node;
-        //     return;
-        // } else if(head->info > *item){
-        //     new_node->next = head;
-        //     head = new_node;
-        //     return;
-        // }
-        // node<T> *curr_node = head, *prev;
-        // while(curr_node && curr_node->info <= *item){
-        //     prev = curr_node;
-        //     curr_node = curr_node->next;
-        // }
-        // prev->next = new_node;
-        // new_node->next = curr_node;
+        length++;
     }
+    T* getItem(T *item){
+        node<T> *curr_node = head;
+        while(curr_node){
+            if(curr_node->info == *item) return &curr_node->info;
+            curr_node = curr_node->next;
+        }
+        return NULL;
+    }
+    bool isInList(T *item){
+        node<T> *curr_node = head;
+        while(curr_node){
+            if(curr_node->info == *item) return true;
+            curr_node = curr_node->next;
+        }
+        return false;
+    }
+    bool isEmpty(){return !head;}
+    int size(){return length;}
+    T* seeNext(){
+        if(isEmpty()) throw "List is empty";
+        if(*next == NULL) return NULL;
+        T* temp = &(*next)->info;
+        next = &(*next)->next;
+        return temp;
+    }
+    T* seeAt(int i){
+        if(i >= length || i < 0) throw "Invalid index";
+        node<T> *curr_node = head;
+        for(int j = 0; j < i; j++) curr_node = curr_node->next;
+        next = &curr_node->next;
+        return &curr_node->info;
+    }
+    void reset(){next = &head;}
     void display(){
         node<T> *curr_node = head;
         int i = 0;
@@ -47,16 +66,56 @@ public:
             i++;
         }
     }
+    bool operator<(const olinkedlist<T> &ol){return length < ol.length;}
+    bool operator>(const olinkedlist<T> &ol){return length > ol.length;}
+    bool operator==(const olinkedlist<T> &ol){
+        if(length != ol.length) return false;
+        node<T> *l1 = head, *l2 = ol.head;
+        while(l1){
+            if(l1->info != l2->info) return false;
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+        return true;
+    }
+    ~olinkedlist(){
+        node<T> *temp;
+        while(head){
+            temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
 };
 
 int main(){
-    olinkedlist<int> test;
-    int a = 1, b = 2, c = 3, d = 5;
-    test.addItem(&c);
-    test.addItem(&a);
-    test.addItem(&b);
-    test.addItem(&d);
-    test.addItem(&a);
-
+    srand(time(NULL));
+    olinkedlist<int> test, newb;
+    int temp;
+    for(int i = 0; i < 5; i++){
+        temp = rand() % 100;
+        test.addItem(&temp);
+        newb.addItem(&temp);
+    }
     test.display();
+    // cout << "getting item " << temp << endl;
+    // cout << test.getItem(&temp) << endl;
+    // temp = 100;
+    // cout << test.isInList(&temp) << endl;
+    // cout << test.size() << endl;
+    // cout << test.isEmpty() << endl;
+    // cout << *test.seeNext() << endl;
+    // cout << *test.seeNext() << endl;
+    // cout << *test.seeAt(2) << endl;
+    // cout << *test.seeNext() << endl;
+    // cout << *test.seeNext() << endl;
+    // cout << test.seeNext() << endl;
+    // test.reset();
+    // cout << *test.seeNext() << endl;
+    // cout << *test.seeNext() << endl;
+    cout << (test == newb) << endl;
+
+
+
+
 }
