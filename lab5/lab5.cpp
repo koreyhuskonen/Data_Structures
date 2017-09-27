@@ -88,34 +88,30 @@ public:
     }
 };
 
-int main(){
-    srand(time(NULL));
-    olinkedlist<int> test, newb;
-    int temp;
-    for(int i = 0; i < 5; i++){
-        temp = rand() % 100;
-        test.addItem(&temp);
-        newb.addItem(&temp);
-    }
-    test.display();
-    // cout << "getting item " << temp << endl;
-    // cout << test.getItem(&temp) << endl;
-    // temp = 100;
-    // cout << test.isInList(&temp) << endl;
-    // cout << test.size() << endl;
-    // cout << test.isEmpty() << endl;
-    // cout << *test.seeNext() << endl;
-    // cout << *test.seeNext() << endl;
-    // cout << *test.seeAt(2) << endl;
-    // cout << *test.seeNext() << endl;
-    // cout << *test.seeNext() << endl;
-    // cout << test.seeNext() << endl;
-    // test.reset();
-    // cout << *test.seeNext() << endl;
-    // cout << *test.seeNext() << endl;
-    cout << (test == newb) << endl;
-
-
-
-
-}
+// int main(){
+//     srand(time(NULL));
+//     olinkedlist<int> test, newb;
+//     int temp;
+//     for(int i = 0; i < 5; i++){
+//         temp = rand() % 100;
+//         test.addItem(&temp);
+//         newb.addItem(&temp);
+//     }
+//     test.display();
+//     cout << "getting item " << temp << endl;
+//     cout << test.getItem(&temp) << endl;
+//     temp = 100;
+//     cout << test.isInList(&temp) << endl;
+//     cout << test.size() << endl;
+//     cout << test.isEmpty() << endl;
+//     cout << *test.seeNext() << endl;
+//     cout << *test.seeNext() << endl;
+//     cout << *test.seeAt(2) << endl;
+//     cout << *test.seeNext() << endl;
+//     cout << *test.seeNext() << endl;
+//     cout << test.seeNext() << endl;
+//     test.reset();
+//     cout << *test.seeNext() << endl;
+//     cout << *test.seeNext() << endl;
+//     cout << (test == newb) << endl;
+// }
