@@ -24,18 +24,20 @@ public:
         new_node->next = temp1;
         length++;
     }
-    T* getItem(T *item){
+    T* getItem(string id){
         node<T> *curr_node = head;
         while(curr_node){
-            if(curr_node->info == *item) return &curr_node->info;
+            if(curr_node->info == id){
+                return &curr_node->info;
+            }
             curr_node = curr_node->next;
         }
         return NULL;
     }
-    bool isInList(T *item){
+    bool isInList(string id){
         node<T> *curr_node = head;
         while(curr_node){
-            if(curr_node->info == *item) return true;
+            if(curr_node->info == id) return true;
             curr_node = curr_node->next;
         }
         return false;
