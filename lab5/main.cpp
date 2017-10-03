@@ -1,3 +1,5 @@
+// Korey Huskonen
+
 #include <iostream>
 #include <ctime>
 #include <sstream>
@@ -10,6 +12,8 @@ int main(){
     olinkedlist<Student> student_directory;
     string input; // generic variable for storing user input
     int menu_selection;
+    bool return_to_menu = true;
+
     do {
 
         do {
@@ -23,7 +27,8 @@ int main(){
                  << "6. Check Student at given location in Directory (seeAt)" << endl
                  << "7. Check the next Student in the Directory (seeNext)" << endl
                  << "8. Reset seeNext to the beginning" << endl
-                 << "9. Exit" << endl
+                 << "9. Display Student Directory" << endl
+                 << "10. Exit" << endl
                  << "Enter your selection: ";
             getline(cin, input);
             stringstream(input) >> menu_selection;
@@ -31,7 +36,7 @@ int main(){
 
         if(menu_selection == 1){
             string fname, lname, mnum;
-            int gpa = 0;
+            float gpa = 0;
             cout << "\n___ Add Student ___\n"
                  << "Enter student's first name: ";
             getline(cin, fname);
@@ -70,44 +75,53 @@ int main(){
                     } catch(...) {
                         gpa = -1;
                     }
-                    if(gpa < 0 || gpa > 4) cout << "\nGPA can only be 0-4\n";
+                    if(gpa < 0 || gpa > 4) cout << "\nGPA must be 0-4\n";
                 } while(gpa < 0 || gpa > 4);
             }
-            Student new_student(fname, lname, mnum, gpa);
-            int month, day, year;
+            int m, d, y;
+            tm bd;
             do {
                 cout << "Enter student's birth month (1-12): ";
                 getline(cin, input);
-                stringstream(input) >> month;
-                if(month < 1 || month > 12) cout << "Birth month can only be 1-12\n";
-            } while(month < 1 || month > 12);
+                stringstream(input) >> m;
+                if(m < 1 || m > 12) cout << "Birth month must be 1-12\n";
+            } while(m < 1 || m > 12);
+
             do {
                 cout << "Enter student's birth day (1-31): ";
                 getline(cin, input);
-                stringstream(input) >> day;
-                if(day < 1 || day > 31) cout << "Birth day can only be 1-31\n";
-            } while(day < 1 || day > 31);
-            time_t curr_time = time(0); // time_t structure from ctime library
+                stringstream(input) >> d;
+                if(d < 1 || d > 31) cout << "Birth day must be 1-31\n";
+            } while(d < 1 || d > 31);
+
+            time_t curr_time = time(NULL); // time_t structure from ctime library
             tm *curr_date = localtime(&curr_time); // tm structure from ctime library
             int curr_year = curr_date->tm_year + 1900;
             do {
                 cout << "Enter student's birth year (1910-" << curr_year << "): ";
                 getline(cin, input);
-                stringstream(input) >> year;
-                if(year < 1910 || year > curr_year) cout << "Birth year can only be 1910-" << curr_year << "\n";
-            } while(year < 1910 || year > curr_year);
-            tm bday_tm;
-            bday_tm.tm_mon = month - 1;
-            bday_tm.tm_mday = day;
-            bday_tm.tm_year = year - 1900;
-            new_student.setBirthday(&bday_tm);
-            student_directory.addItem(&new_student);
+                stringstream(input) >> y;
+                if(y < 1910 || y > curr_year) cout << "Birth year must be 1910-" << curr_year << "\n";
+            } while(y < 1910 || y > curr_year);
+            cout << endl;
+            bd.tm_mon = m - 1;
+            bd.tm_mday = d;
+            bd.tm_year = y - 1900;
+            Student new_student(fname, lname, mnum, gpa);
+            new_student.setBirthday(&bd);
+            new_student.display();
+            student_directory.addItem(new_student);
 
         } else if(menu_selection == 2){
             cout << "\nEnter student's MNumber: ";
             getline(cin, input);
             Student* student = student_directory.getItem(input);
-            if(student) cout << student->getName() << endl;
+            if(student){
+                cout << endl;
+                student->display();
+            } else {
+                cout << "\nThis student is not in the directory" << endl;
+            }
 
         } else if(menu_selection == 3){
             cout << "\nEnter student's MNumber: ";
@@ -141,9 +155,12 @@ int main(){
             try {
                 student = student_directory.seeAt(index);
             } catch(...) {
-                cout << "Invalid location\nYou can only search locations 0-" << student_directory.size() - 1 << endl;
+                cout << "\nInvalid location\nYou can only search locations 0-" << student_directory.size() - 1 << endl;
             }
-            if(student) cout << "The student at location " << index << " is " << student->getName() << endl;
+            if(student){
+                cout << "\nThe student at location " << index << " is " << student->getName() << "\n\n";
+                student->display();
+            }
 
         } else if(menu_selection == 7){
             Student *student = NULL;
@@ -151,6 +168,7 @@ int main(){
                 student = student_directory.seeNext();
                 if(student){
                     cout << "\nThe next student is " << student->getName() << endl;
+                    student->display();
                 } else {
                     cout << "\nYou have reached the end of the directory and need to reset seeNext" << endl;
                 }
@@ -162,8 +180,20 @@ int main(){
             student_directory.reset();
             cout << "\nseeNext has been reset" << endl;
 
+        } else if(menu_selection == 9){
+                node<Student> *curr_node = student_directory.start();
+                for(int i = 0; i < student_directory.size(); i++){
+                    cout << endl << i << ":" << endl;
+                    curr_node->info.display();
+                    curr_node = curr_node->next;
+                }
+
+        } else {
+            return_to_menu = false;
         }
 
-    } while(true);
+    } while(return_to_menu);
 
 }
+
+// Korey Huskonen

@@ -1,5 +1,8 @@
+// Korey Huskonen
+
 #include <iostream>
 #include <ctime>
+#include <sstream>
 
 using namespace std;
 
@@ -25,6 +28,10 @@ public:
         // find difference between current time and birthday in seconds, convert to years
         return (time(0) - Birthday)/(60*60*24*365);
     }
+    void display(){
+        cout << "Name: " << getName() << "  |  Age: " << getAge() << "  |  GPA: " << GPA << endl
+             << "MNumber: " << getMNumber() << "  |  Birthday: " << getBirthday() << endl;
+    }
     bool operator>(const Student &s){
         return MNumber > s.MNumber;
     }
@@ -39,24 +46,4 @@ public:
     }
 };
 
-
-// int main(){
-// //     string name = "M10336480";
-// //     int temp = stoi(name.substr(1));
-// //
-// //     tm test;
-// //     test.tm_mon = 8;
-// //     test.tm_year = 117;
-// //     time_t now = time(NULL);
-// //     time_t newb_time = mktime(&test);
-// //     cout << ctime(&newb_time) << endl;
-// //     cout << ctime(&now) << endl;
-// //     cout << (now - newb_time)/(60*60*24) << endl;
-//     // Student newb("K","K","M10336480");
-//     // Student test("K","K","M10336580");
-// //     test.setBirthday("02041976");
-// //     newb.setBirthday("02041976");
-// //     cout << test.getBirthday() << endl;
-// //     cout << newb.getBirthday() << endl;
-//     // cout << (newb == "M10336480") << endl;
-// }
+// Korey Huskonen

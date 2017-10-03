@@ -1,3 +1,5 @@
+// Korey Huskonen
+
 #include <iostream>
 
 using namespace std;
@@ -12,9 +14,9 @@ template <class T> class olinkedlist {
     int length;
 public:
     olinkedlist() : head(), next(&head), length(0) {}
-    void addItem(T *item){
+    void addItem(T &item){
         node<T> *new_node = new node<T>;
-        new_node->info = *item;
+        new_node->info = item;
         node<T> *temp1 = head, **temp2 = &head;
         while(temp1 && temp1->info < new_node->info){
             temp2 = &temp1->next;
@@ -59,6 +61,7 @@ public:
         return &curr_node->info;
     }
     void reset(){next = &head;}
+    node<T>* start(){return head;}
     void display(){
         node<T> *curr_node = head;
         int i = 0;
@@ -117,3 +120,5 @@ public:
 //     cout << *test.seeNext() << endl;
 //     cout << (test == newb) << endl;
 // }
+
+// Korey Huskonen
