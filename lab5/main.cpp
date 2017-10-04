@@ -167,7 +167,7 @@ int main(){
             try {
                 student = student_directory.seeNext();
                 if(student){
-                    cout << "\nThe next student is " << student->getName() << endl;
+                    cout << "\nThe next student is " << student->getName() << "\n\n";
                     student->display();
                 } else {
                     cout << "\nYou have reached the end of the directory and need to reset seeNext" << endl;
