@@ -14,7 +14,7 @@ class Hanoi {
     Stack<string>* towers[num_towers];
 public:
     Hanoi(int num_discs) : num_discs(num_discs) {
-        for(int i = 0; i < num_towers; i++) towers[i] = new Stack<string>(num_discs);
+        for(int i = 0; i < num_towers; i++) towers[i] = new Stack<string>(2*num_discs); // double num_discs in case players stack all discs on one tower
         for(int i = num_discs; i > 0; i--){
             string *temp1 = new string, *temp2 = new string;
             *temp1 = "L" + to_string(i);
@@ -23,7 +23,8 @@ public:
             towers[num_towers-1]->push(temp2);
         }
     }
-    void moveDisc(char player, Stack<string>* from, Stack<string>* to){
+    void moveDisc(char player, int f, int t){
+        Stack<string> *from = towers[f], *to = towers[t];
         if(!from->getTop()){
             cout << "Illegal! You cannot move a disc from an empty tower!" << endl;
             return;
@@ -33,7 +34,7 @@ public:
             cout << "Illegal! The disc on top of this tower belongs to the other player!" << endl;
             return;
         }
-        if(to->getTop() && *to->getTop() < *from->getTop()){
+        if(to->getTop() && (*to->getTop())[1] < (*from->getTop())[1]){
             cout << "Illegal! You cannot move a bigger disc onto a smaller one!" << endl;
             return;
         }
@@ -91,10 +92,33 @@ int main(){
         getline(cin, input);
         stringstream(input) >> num_discs;
     } while(num_discs < 2);
+
     Hanoi game(num_discs);
-    cout << "Your mission:\nGet all your discs to the other side\n";
+    cout << "\nYour mission:\nGet all your discs to the other side\n";
+
+    int from, to; // towers indexes that you are moving from and to
+    while(!game.gameOver()){
+        turn_count++;
+        cout << "\n\n_____ Turn " << turn_count << " _____\n";
+        for(int i = 0; i < 2; i++){
+            cout << "\nPlayer " << players[i] << ", it's your turn." << endl;
+            game.display();
+            do {
+                cout << "Enter the tower to move from (0-" << num_towers-1 << "): ";
+                getline(cin, input);
+                stringstream(input) >> from;
+            } while(from < 0 || from > num_towers-1);
+            do {
+                cout << "Enter the tower to move to (0-" << num_towers-1 << "): ";
+                getline(cin, input);
+                stringstream(input) >> to;
+            } while(to < 0 || to > num_towers-1);
+
+            game.moveDisc(players[i], from, to);
+        }
+    }
+    cout << endl;
     game.display();
-    game.gameOver();
-    game.display();
+    cout << "\nGame Over\n\n";
 
 }

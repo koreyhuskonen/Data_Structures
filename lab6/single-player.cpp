@@ -56,7 +56,7 @@ int main(){
     } while(num_discs < 2);
 
     Hanoi game(num_discs);
-    cout << "Your mission:\nMove one disc at a time until all discs are stacked in order on C\n";
+    cout << "\nYour mission:\nMove one disc at a time until all discs are stacked in order on C\n";
 
     while(!game.gameOver()){
         turn_count++;
