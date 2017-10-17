@@ -31,7 +31,7 @@ public:
         }
         string disc = *from->getTop();
         if(disc[0] != player){
-            cout << "Illegal! The disc on top of this tower belongs to the other player!" << endl;
+            cout << "Illegal! You cannot move a disc that you do not own!" << endl;
             return;
         }
         if(to->getTop() && (*to->getTop())[1] < (*from->getTop())[1]){
@@ -75,7 +75,7 @@ public:
 };
 
 int main(){
-    string input;
+    string input; // dummy variable for user input
     int num_discs, turn_count = 0;
 
     cout << "\nWelcome to..." << endl
@@ -96,7 +96,7 @@ int main(){
     Hanoi game(num_discs);
     cout << "\nYour mission:\nGet all your discs to the other side\n";
 
-    int from, to; // towers indexes that you are moving from and to
+    int from, to; // tower indexes to pop from and push to
     while(!game.gameOver()){
         turn_count++;
         cout << "\n\n_____ Turn " << turn_count << " _____\n";
@@ -113,7 +113,6 @@ int main(){
                 getline(cin, input);
                 stringstream(input) >> to;
             } while(to < 0 || to > num_towers-1);
-
             game.moveDisc(players[i], from, to);
         }
     }
