@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cmath>
 #include "stack_class.cpp"
+#include "queue_class.cpp"
 
 using namespace std;
 
@@ -12,13 +13,14 @@ const char players[2] = {'L', 'R'};
 class Hanoi {
     int num_discs;
     Stack<string>* towers[num_towers];
+    Queue<Move> moves;
 public:
     Hanoi(int num_discs) : num_discs(num_discs) {
         for(int i = 0; i < num_towers; i++) towers[i] = new Stack<string>(2*num_discs); // double num_discs in case players stack all discs on one tower
         for(int i = num_discs; i > 0; i--){
             string *temp1 = new string, *temp2 = new string;
-            *temp1 = "L" + to_string(i);
-            *temp2 = "R" + to_string(i);
+            *temp1 = players[0] + to_string(i);
+            *temp2 = players[1] + to_string(i);
             towers[0]->push(temp1);
             towers[num_towers-1]->push(temp2);
         }
@@ -39,13 +41,16 @@ public:
             return;
         }
         to->push(from->pop());
+        // now store the current move in the queue "moves"
+        Move* current_move = new Move(player, f, t, disc);
+        moves.enqueue(current_move);
     }
     void display(){
         for(int i = 0; i < num_towers; i++){
             cout << i << ":"; displayStack(*towers[i]); cout << endl;
         }
     }
-    bool checkTower(Stack<string>* tower, char player){ // checks if we got a winning tower
+    bool checkTower(Stack<string>* tower, char player){ // checks if each disc on a tower is owned by the same player
         if(tower->length() != num_discs) return false;
         bool result = true;
         Stack<string> temp_tower(num_discs); // create a temporary tower to hold discs
@@ -57,10 +62,11 @@ public:
             }
             temp_tower.push(tower->pop()); // pop from tower and store in temp_tower
         }
-        for(int i = 0; i < temp_tower.length(); i++) tower->push(temp_tower.pop()); // put the discs back on original tower
+        int num_discs_removed = temp_tower.length();
+        for(int i = 0; i < num_discs_removed; i++) tower->push(temp_tower.pop()); // put the discs back on original tower
         return result;
     }
-    bool gameOver(){
+    bool gameOver(){ // checks if either player has a winning tower
         for(int i = 0; i < 2; i++){
             if(checkTower(towers[i], players[1])) return true;
         }
