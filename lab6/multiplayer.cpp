@@ -75,6 +75,7 @@ public:
         }
         return false;
     }
+    Queue<Move>* getMoves(){return &moves;}
     ~Hanoi(){
         for(int i = 0; i < num_towers; i++) delete towers[i];
     }
@@ -124,6 +125,8 @@ int main(){
     }
     cout << endl;
     game.display();
+    cout << "\n___ Game Timeline ___\n";
+    game.getMoves()->display();
     cout << "\nGame Over\n\n";
 
 }

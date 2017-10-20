@@ -15,7 +15,7 @@ public:
         return temp;
     }
     void display(){
-        for(int i = 0; i < q.size(); i++) cout << i << ": " << *q[i] << endl;
+        for(int i = 0; i < q.size(); i++) cout << i+1 << ": " << *q[i] << endl;
     }
     ~Queue(){
         for(int i = 0; i < q.size(); i++) delete q[i];
