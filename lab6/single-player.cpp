@@ -6,7 +6,7 @@
 using namespace std;
 
 // I just redefined the Queue class here so I could use it with the automated solution
-// I didn't want to import the Move struct used for multiplayer mode 
+// I didn't want to import the Move struct used for multiplayer mode
 template <class T> class Queue {
     vector<T*> q;
 public:
@@ -102,7 +102,7 @@ int main(){
         stringstream(input) >> num_discs;
     } while(num_discs < 2);
 
-    cout << "\nYour mission: Get all your discs to the other side\n\n";
+    cout << "\nYour mission: Move your discs from tower 0 to tower 2\n\n";
 
     Hanoi game(num_discs);
     game.display();

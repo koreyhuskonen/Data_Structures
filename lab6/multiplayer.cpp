@@ -100,7 +100,7 @@ int main(){
         stringstream(input) >> num_discs;
     } while(num_discs < 2);
 
-    cout << "\nYour mission: Get all your discs to the other side\n";
+    cout << "\nYour mission: Move all your discs to the other side\n";
 
     Hanoi game(num_discs);
     int from, to, turn_count = 0; // *from* and *to* are tower indexes to pop from and push to
