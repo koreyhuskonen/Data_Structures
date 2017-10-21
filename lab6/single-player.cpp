@@ -1,24 +1,58 @@
 #include <iostream>
 #include <sstream>
+#include <vector>
 #include "stack_class.cpp"
 
 using namespace std;
 
+// I just redefined the Queue class here so I could use it with the automated solution
+// I didn't want to import the Move struct used for multiplayer mode 
+template <class T> class Queue {
+    vector<T*> q;
+public:
+    void enqueue(T* item){
+        q.push_back(item);
+    }
+    T* dequeue(){
+        T* temp = q[0];
+        q.erase(q.begin());
+        return temp;
+    }
+    void display(){
+        for(int i = 0; i < q.size(); i++) cout << i+1 << ": " << *q[i] << endl;
+    }
+    ~Queue(){
+        for(int i = 0; i < q.size(); i++) delete q[i];
+    }
+};
+
+struct Move {
+    int from, to, disc;
+    Move(int from, int to, int disc) : from(from), to(to), disc(disc) {}
+};
+
+std::ostream& operator<<(std::ostream& os, const Move& mv){
+    os << "Moved " << mv.disc << " from " << mv.from << " to " << mv.to;
+    return os;
+}
+
+const int num_towers = 3;
+
 class Hanoi {
     int num_discs;
-    Stack<int> A, B, C;
+    Stack<int>* towers[num_towers];
+    Queue<Move> moves;
 public:
-    Hanoi(int num_discs) : num_discs(num_discs), A(num_discs), B(num_discs), C(num_discs) {
+    Hanoi(int num_discs) : num_discs(num_discs) {
+        for(int i = 0; i < num_towers; i++) towers[i] = new Stack<int>(num_discs);
         for(int i = num_discs; i > 0; i--){
             int* temp = new int;
             *temp = i;
-            A.push(temp);
+            towers[0]->push(temp);
         }
     }
-    Stack<int>* getA(){return &A;}
-    Stack<int>* getB(){return &B;}
-    Stack<int>* getC(){return &C;}
-    void moveDisc(Stack<int>* from, Stack<int>* to){
+    void moveDisc(int f, int t){
+        Stack<int> *from = towers[f], *to = towers[t];
         if(!from->getTop()){
             cout << "Illegal! You cannot move a disc from an empty tower!" << endl;
             return;
@@ -26,19 +60,32 @@ public:
             cout << "Illegal! You cannot move a bigger disc onto a smaller one!" << endl;
             return;
         }
+
+        Move* current_move = new Move(f, t, *from->getTop());
+        moves.enqueue(current_move);
         to->push(from->pop());
     }
-    bool gameOver(){return C.length() == num_discs;}
+    bool gameOver(){return towers[2]->length() == num_discs;}
+    void showMoves(){moves.display();}
     void display(){
-        cout << "A:"; displayStack(A); cout << endl;
-        cout << "B:"; displayStack(B); cout << endl;
-        cout << "C:"; displayStack(C); cout << endl;
+        for(int i = 0; i < num_towers; i++){
+            cout << i << ":"; displayStack(*towers[i]); cout << endl;
+        }
+    }
+    void automate(int n, int from, int to, int aux){
+        if(n == 1){
+            moveDisc(from, to);
+            return;
+        }
+        automate(n-1, from, aux, to);
+        moveDisc(from, to);
+        automate(n-1, aux, to, from);
     }
 };
 
 int main(){
-    string input;
-    int num_discs, turn_count = 0, player_option;
+    string input; // dummy variable for user input
+    int num_discs;
 
     cout << "\nWelcome to..." << endl
          << " _/\\_     _/\\_     _/\\_ \n"
@@ -55,34 +102,38 @@ int main(){
         stringstream(input) >> num_discs;
     } while(num_discs < 2);
 
+    cout << "\nYour mission: Get all your discs to the other side\n\n";
+
     Hanoi game(num_discs);
-    cout << "\nYour mission:\nMove one disc at a time until all discs are stacked in order on C\n";
+    game.display();
 
-    while(!game.gameOver()){
-        turn_count++;
-        cout << "\n_____ Turn " << turn_count << " _____\n";
-        game.display();
-        do {
-            cout << "\nYour options:\n"
-                 << "1. Move from A to B\n"
-                 << "2. Move from A to C\n"
-                 << "3. Move from B to A\n"
-                 << "4. Move from B to C\n"
-                 << "5. Move from C to A\n"
-                 << "6. Move from C to B\n"
-                 << "Your selection: ";
-            getline(cin, input);
-            stringstream(input) >> player_option;
-        } while(player_option < 1 || player_option > 6);
-
-        if(player_option == 1) game.moveDisc(game.getA(), game.getB());
-        if(player_option == 2) game.moveDisc(game.getA(), game.getC());
-        if(player_option == 3) game.moveDisc(game.getB(), game.getA());
-        if(player_option == 4) game.moveDisc(game.getB(), game.getC());
-        if(player_option == 5) game.moveDisc(game.getC(), game.getA());
-        if(player_option == 6) game.moveDisc(game.getC(), game.getB());
+    int from, to, turn_count = 0; // *from* and *to* are tower indexes to pop from and push to
+    cout << "\nAutomate solution? (y/n) ";
+    getline(cin, input);
+    if(input == "y" || input == "Y"){
+        game.automate(num_discs, 0, 2, 1);
+    } else {
+        while(!game.gameOver()){
+            turn_count++;
+            cout << "\n_____ Turn " << turn_count << " _____\n";
+            game.display();
+            do {
+                cout << "Enter the tower to move from (0-" << num_towers-1 << "): ";
+                getline(cin, input);
+                stringstream(input) >> from;
+            } while(from < 0 || from > num_towers-1);
+            do {
+                cout << "Enter the tower to move to (0-" << num_towers-1 << "): ";
+                getline(cin, input);
+                stringstream(input) >> to;
+            } while(to < 0 || to > num_towers-1);
+            game.moveDisc(from, to);
+        }
     }
     cout << endl;
     game.display();
-    cout << "\nGame Over\n\n";
+    cout << "\nGame Over\n";
+    cout << "\n___ Turn History ___\n";
+    game.showMoves();
+    cout << "\n";
 }

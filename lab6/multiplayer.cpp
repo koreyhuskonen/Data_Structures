@@ -75,7 +75,7 @@ public:
         }
         return false;
     }
-    Queue<Move>* getMoves(){return &moves;}
+    void showMoves(){moves.display();}
     ~Hanoi(){
         for(int i = 0; i < num_towers; i++) delete towers[i];
     }
@@ -83,7 +83,7 @@ public:
 
 int main(){
     string input; // dummy variable for user input
-    int num_discs, turn_count = 0;
+    int num_discs;
 
     cout << "\nWelcome to..." << endl
          << " _/\\_     _/\\_     _/\\_ \n"
@@ -100,11 +100,12 @@ int main(){
         stringstream(input) >> num_discs;
     } while(num_discs < 2);
 
-    Hanoi game(num_discs);
-    cout << "\nYour mission:\nGet all your discs to the other side\n";
+    cout << "\nYour mission: Get all your discs to the other side\n";
 
-    int from, to; // tower indexes to pop from and push to
-    while(!game.gameOver()){
+    Hanoi game(num_discs);
+    int from, to, turn_count = 0; // *from* and *to* are tower indexes to pop from and push to
+    bool game_not_over = true;
+    while(game_not_over){
         turn_count++;
         cout << "\n\n_____ Turn " << turn_count << " _____\n";
         for(int i = 0; i < 2; i++){
@@ -121,12 +122,25 @@ int main(){
                 stringstream(input) >> to;
             } while(to < 0 || to > num_towers-1);
             game.moveDisc(players[i], from, to);
+
+            if(game.gameOver()){
+                game_not_over = false;
+                break;
+            }
         }
     }
+
+    // testing
+    // game.moveDisc(players[0], 0, 1);
+    // game.moveDisc(players[0], 0, 2);
+    // game.moveDisc(players[1], 4, 3);
+    // game.moveDisc(players[1], 4, 0);
+    // game.moveDisc(players[1], 3, 0);
+
     cout << endl;
     game.display();
-    cout << "\n___ Game Timeline ___\n";
-    game.getMoves()->display();
-    cout << "\nGame Over\n\n";
-
+    cout << "\nGame Over\n";
+    cout << "\n___ Turn History ___\n";
+    game.showMoves();
+    cout << "\n";
 }
