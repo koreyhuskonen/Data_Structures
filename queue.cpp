@@ -1,24 +1,21 @@
-// base of stack = -1
-// example of queue - printing queue which spools out jobs (prints)
-// 2 types of functions: user level (defined) functions
-//                       kernel level functions
-
-
 #include <iostream>
 
 using namespace std;
 
 typedef struct nodetype {
     int info;
-    struct nodetype *next = NULL;
+    struct nodetype *next;
 } node;
 
-typedef struct {
-    node *front = NULL;
-    node *rear = NULL;
+struct queue {
+    node *front;
+    node *rear;
+    queue() : front(), rear() {}
     void enqueue(int n){
         node *new_node = new node;
         new_node->info = n;
+        new_node->next = NULL;
+        // new_node->next = front;
         if(front){
             rear->next = new_node;
             rear = new_node;
@@ -37,7 +34,6 @@ typedef struct {
     }
     void dequeue(){
         if(front){
-            cout << front->info << endl;
             node *temp = front;
             if(front == rear){
                 rear = front = NULL;
@@ -47,7 +43,7 @@ typedef struct {
             delete temp;
         }
     }
-} queue;
+};
 
 int main(){
     queue q;
@@ -63,7 +59,6 @@ int main(){
     q.dequeue();
     q.dequeue();
 
-
-    q.display();
+    cout << test.size() << endl;
 
 }
