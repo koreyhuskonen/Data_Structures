@@ -6,7 +6,7 @@
 using namespace std;
 
 // I just redefined the Queue class here so I could use it with the automated solution
-// I didn't want to import the Move struct used for multiplayer mode
+// I didn't want to import the Move struct used for multiplayer mode -- had to make a new Move struct
 template <class T> class Queue {
     vector<T*> q;
 public:
@@ -32,7 +32,7 @@ struct Move {
 };
 
 std::ostream& operator<<(std::ostream& os, const Move& mv){
-    os << "Moved " << mv.disc << " from " << mv.from << " to " << mv.to;
+    os << "Moved " << mv.disc << " from Tower" << mv.from+1 << " to Tower" << mv.to+1;
     return os;
 }
 
@@ -69,7 +69,7 @@ public:
     void showMoves(){moves.display();}
     void display(){
         for(int i = 0; i < num_towers; i++){
-            cout << i << ":"; displayStack(*towers[i]); cout << endl;
+            cout << "Tower" << i+1 << "-> "; displayStack(*towers[i]); cout << endl;
         }
     }
     void automate(int n, int from, int to, int aux){
@@ -102,7 +102,7 @@ int main(){
         stringstream(input) >> num_discs;
     } while(num_discs < 2);
 
-    cout << "\nYour mission: Move your discs from tower 0 to tower 2\n\n";
+    cout << "\nYour mission: Move your discs from Tower1 to Tower3\n\n";
 
     Hanoi game(num_discs);
     game.display();
@@ -118,16 +118,16 @@ int main(){
             cout << "\n_____ Turn " << turn_count << " _____\n";
             game.display();
             do {
-                cout << "Enter the tower to move from (0-" << num_towers-1 << "): ";
+                cout << "Enter the tower to move from (1-" << num_towers << "): ";
                 getline(cin, input);
                 stringstream(input) >> from;
-            } while(from < 0 || from > num_towers-1);
+            } while(from < 1 || from > num_towers);
             do {
-                cout << "Enter the tower to move to (0-" << num_towers-1 << "): ";
+                cout << "Enter the tower to move to (1-" << num_towers << "): ";
                 getline(cin, input);
                 stringstream(input) >> to;
-            } while(to < 0 || to > num_towers-1);
-            game.moveDisc(from, to);
+            } while(to < 1 || to > num_towers);
+            game.moveDisc(from-1, to-1);
         }
     }
     cout << endl;
