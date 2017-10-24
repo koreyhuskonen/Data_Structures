@@ -119,11 +119,30 @@ void quickSort(int* arr, int low, int high){
     }
 }
 
+void countSort(int* arr, int size){
+    int range = *max_element(arr, arr+size) + 1; // +1 to include last index
+    int c[range], output[size];
+    memset(c, 0, sizeof(c));
+    for(int i = 0; i < size; i++){
+        c[arr[i]]++;
+    }
+    for(int i = 1; i < range; i++){
+        c[i] += c[i-1];
+    }
+    for(int i = 0; i < size; i++){
+        output[c[arr[i]]-1] = arr[i];
+        c[arr[i]]--;
+    }
+    for(int i = 0; i < size; i++){
+        arr[i] = output[i];
+    }
+}
+
 // int main(){
 //     struct timespec start, finish;
 //     double elapsed;
 //     srand(time(NULL));
-//     int size = 10000, num_tests = 5, test_input[num_tests][size], temp;
+//     int size = 15, num_tests = 6, test_input[num_tests][size], temp;
 //     for(int j = 0; j < size; j++){
 //         temp = rand() % 100;
 //         for(int i = 0; i < num_tests; i++){
@@ -134,49 +153,57 @@ void quickSort(int* arr, int low, int high){
 //     cout << "\n_____ Unsorted _____" << endl;
 //     for(int i = 0; i < size; i++) cout << test_input[0][i] << endl;
 //
-//     cout << "\nBubble" << endl;
-//     clock_gettime(CLOCK_MONOTONIC, &start);
-//     bubble(test_input[0], size);
-//     clock_gettime(CLOCK_MONOTONIC, &finish);
-//     elapsed = (finish.tv_sec - start.tv_sec);
-//     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
-//     // for(int i = 0; i < size; i++) cout << test_input[0][i] << endl;
-//     cout << "Time: " << elapsed << endl;
-//
-//     cout << "\nInsertion" << endl;
-//     clock_gettime(CLOCK_MONOTONIC, &start);
-//     insertion2(test_input[1], size);
-//     clock_gettime(CLOCK_MONOTONIC, &finish);
-//     elapsed = (finish.tv_sec - start.tv_sec);
-//     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
-//     // for(int i = 0; i < size; i++) cout << test_input[1][i] << endl;
-//     cout << "Time: " << elapsed << endl;
-//
-//     cout << "\nSelection" << endl;
-//     clock_gettime(CLOCK_MONOTONIC, &start);
-//     selection(test_input[2], size);
-//     clock_gettime(CLOCK_MONOTONIC, &finish);
-//     elapsed = (finish.tv_sec - start.tv_sec);
-//     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
-//     // for(int i = 0; i < size; i++) cout << test_input[2][i] << endl;
-//     cout << "Time: " << elapsed << endl;
-//
-//     cout << "\nMerge" << endl;
-//     clock_gettime(CLOCK_MONOTONIC, &start);
-//     mergeSort(test_input[3], 0, size-1);
-//     clock_gettime(CLOCK_MONOTONIC, &finish);
-//     elapsed = (finish.tv_sec - start.tv_sec);
-//     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
-//     // for(int i = 0; i < size; i++) cout << test_input[3][i] << endl;
-//     cout << "Time: " << elapsed << endl;
-//
-//     cout << "\nQuick" << endl;
-//     clock_gettime(CLOCK_MONOTONIC, &start);
-//     quickSort(test_input[4], 0, size-1);
-//     clock_gettime(CLOCK_MONOTONIC, &finish);
-//     elapsed = (finish.tv_sec - start.tv_sec);
-//     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
-//     // for(int i = 0; i < size; i++) cout << test_input[4][i] << endl;
-//     cout << "Time: " << elapsed << endl;
-//
+// //     cout << "\nBubble" << endl;
+// //     clock_gettime(CLOCK_MONOTONIC, &start);
+// //     bubble(test_input[0], size);
+// //     clock_gettime(CLOCK_MONOTONIC, &finish);
+// //     elapsed = (finish.tv_sec - start.tv_sec);
+// //     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+// //     // for(int i = 0; i < size; i++) cout << test_input[0][i] << endl;
+// //     cout << "Time: " << elapsed << endl;
+// //
+// //     cout << "\nInsertion" << endl;
+// //     clock_gettime(CLOCK_MONOTONIC, &start);
+// //     insertion2(test_input[1], size);
+// //     clock_gettime(CLOCK_MONOTONIC, &finish);
+// //     elapsed = (finish.tv_sec - start.tv_sec);
+// //     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+// //     // for(int i = 0; i < size; i++) cout << test_input[1][i] << endl;
+// //     cout << "Time: " << elapsed << endl;
+// //
+// //     cout << "\nSelection" << endl;
+// //     clock_gettime(CLOCK_MONOTONIC, &start);
+// //     selection(test_input[2], size);
+// //     clock_gettime(CLOCK_MONOTONIC, &finish);
+// //     elapsed = (finish.tv_sec - start.tv_sec);
+// //     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+// //     // for(int i = 0; i < size; i++) cout << test_input[2][i] << endl;
+// //     cout << "Time: " << elapsed << endl;
+// //
+// //     cout << "\nMerge" << endl;
+// //     clock_gettime(CLOCK_MONOTONIC, &start);
+// //     mergeSort(test_input[3], 0, size-1);
+// //     clock_gettime(CLOCK_MONOTONIC, &finish);
+// //     elapsed = (finish.tv_sec - start.tv_sec);
+// //     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+// //     // for(int i = 0; i < size; i++) cout << test_input[3][i] << endl;
+// //     cout << "Time: " << elapsed << endl;
+// //
+// //     cout << "\nQuick" << endl;
+// //     clock_gettime(CLOCK_MONOTONIC, &start);
+// //     quickSort(test_input[4], 0, size-1);
+// //     clock_gettime(CLOCK_MONOTONIC, &finish);
+// //     elapsed = (finish.tv_sec - start.tv_sec);
+// //     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+// //     // for(int i = 0; i < size; i++) cout << test_input[4][i] << endl;
+// //     cout << "Time: " << elapsed << endl;
+//     //
+//     // cout << "\nCount" << endl;
+//     // clock_gettime(CLOCK_MONOTONIC, &start);
+//     // countSort(test_input[5], size);
+//     // clock_gettime(CLOCK_MONOTONIC, &finish);
+//     // elapsed = (finish.tv_sec - start.tv_sec);
+//     // elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+//     // // for(int i = 0; i < size; i++) cout << test_input[5][i] << endl;
+//     // cout << "Time: " << elapsed << endl;
 // }

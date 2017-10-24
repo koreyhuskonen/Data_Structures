@@ -9,19 +9,22 @@ typedef chrono::high_resolution_clock Clock;
 int main(){
     srand(time(0));
     int w = 15;
-    cout << left << setw(10) << "n"
+    cout << endl
+         << left << setw(10) << "n"
          << left << setw(w) << "Bubble"
          << left << setw(w) << "Insertion"
          << left << setw(w) << "Selection"
          << left << setw(w) << "Merge"
          << left << setw(w) << "Quick"
+         << left << setw(w) << "Count"
          << endl;
 
-    int num_algos = 5, num_trials = 10, sizes[5] = {10,100,500,5000,25000};
-    unsigned long bubble_sum, insertion_sum, selection_sum, merge_sum, quick_sum;
+    int num_algos = 6, num_trials = 10, sizes[5] = {10,100,500,5000,25000};
+    unsigned long long bubble_sum, insertion_sum, selection_sum, merge_sum, quick_sum,
+                       count_sum;
     for(int x = 0; x < 5; x++){
         int size = sizes[x];
-        bubble_sum = insertion_sum = selection_sum = merge_sum = quick_sum = 0;
+        bubble_sum = insertion_sum = selection_sum = merge_sum = quick_sum = count_sum = 0;
         for(int j = 0; j < num_trials; j++){
             int test[num_algos][size];
             for(int i = 0; i < size; i++){
@@ -63,6 +66,12 @@ int main(){
             t2 = Clock::now();
             quick_sum += chrono::duration_cast<chrono::nanoseconds>(t2 - t1).count();
 
+            t1 = Clock::now();
+            countSort(test[5], size);
+            t2 = Clock::now();
+            count_sum += chrono::duration_cast<chrono::nanoseconds>(t2 - t1).count();
+
+
             // for(int j = 0; j < num_algos; j++){
             //     for(int i = 0; i < size; i++){
             //         cout << test[j][i] << endl;
@@ -77,6 +86,7 @@ int main(){
              << left << setw(w) << selection_sum/num_trials
              << left << setw(w) << merge_sum/num_trials
              << left << setw(w) << quick_sum/num_trials
+             << left << setw(w) << count_sum/num_trials
              << endl;
 
     }
