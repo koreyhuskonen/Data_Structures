@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -138,11 +139,43 @@ void countSort(int* arr, int size){
     }
 }
 
+void radix(int* arr, int size){
+    int max_val = *max_element(arr, arr+size);
+    int output[size];
+
+    for(int j = 1; max_val/j > 0; j *= 10){
+        int c[10] = {0};
+        for(int i = 0; i < size; i++){
+            int index = arr[i]/j % 10;
+            c[index]++;
+        }
+
+        for(int i = 1; i < 10; i++){
+            c[i] += c[i-1];
+        }
+        for(int i = size - 1; i >= 0; i--){
+            int index = arr[i]/j % 10;
+            output[c[index]-1] = arr[i];
+            c[index]--;
+        }
+        for(int i = 0; i < size; i++){
+            arr[i] = output[i];
+        }
+
+    }
+}
+
+// int main(){
+//     int bob[6] = {1,2,44,3,77799999,12345};
+//     radix(bob, 6);
+//     for(int i = 0; i < 6; i++) cout << bob[i] << endl;
+// }
+
 // int main(){
 //     struct timespec start, finish;
 //     double elapsed;
 //     srand(time(NULL));
-//     int size = 15, num_tests = 6, test_input[num_tests][size], temp;
+//     int size = 15, num_tests = 7, test_input[num_tests][size], temp;
 //     for(int j = 0; j < size; j++){
 //         temp = rand() % 100;
 //         for(int i = 0; i < num_tests; i++){
@@ -206,4 +239,13 @@ void countSort(int* arr, int size){
 //     // elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 //     // // for(int i = 0; i < size; i++) cout << test_input[5][i] << endl;
 //     // cout << "Time: " << elapsed << endl;
+//
+//     cout << "\nRadix" << endl;
+//     clock_gettime(CLOCK_MONOTONIC, &start);
+//     radix(test_input[6], size);
+//     clock_gettime(CLOCK_MONOTONIC, &finish);
+//     elapsed = (finish.tv_sec - start.tv_sec);
+//     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+//     for(int i = 0; i < size; i++) cout << test_input[6][i] << endl;
+//     cout << "Time: " << elapsed << endl;
 // }

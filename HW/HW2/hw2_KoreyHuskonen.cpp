@@ -17,14 +17,15 @@ int main(){
          << left << setw(w) << "Merge"
          << left << setw(w) << "Quick"
          << left << setw(w) << "Count"
+         << left << setw(w) << "Radix"
          << endl;
 
-    int num_algos = 6, num_trials = 10, sizes[5] = {10,100,500,5000,25000};
+    int num_algos = 7, num_trials = 10, sizes[5] = {10,100,500,5000,25000};
     unsigned long long bubble_sum, insertion_sum, selection_sum, merge_sum, quick_sum,
-                       count_sum;
+                       count_sum, radix_sum;
     for(int x = 0; x < 5; x++){
         int size = sizes[x];
-        bubble_sum = insertion_sum = selection_sum = merge_sum = quick_sum = count_sum = 0;
+        bubble_sum = insertion_sum = selection_sum = merge_sum = quick_sum = count_sum = radix_sum = 0;
         for(int j = 0; j < num_trials; j++){
             int test[num_algos][size];
             for(int i = 0; i < size; i++){
@@ -71,6 +72,10 @@ int main(){
             t2 = Clock::now();
             count_sum += chrono::duration_cast<chrono::nanoseconds>(t2 - t1).count();
 
+            t1 = Clock::now();
+            radix(test[6], size);
+            t2 = Clock::now();
+            radix_sum += chrono::duration_cast<chrono::nanoseconds>(t2 - t1).count();
 
             // for(int j = 0; j < num_algos; j++){
             //     for(int i = 0; i < size; i++){
@@ -87,6 +92,7 @@ int main(){
              << left << setw(w) << merge_sum/num_trials
              << left << setw(w) << quick_sum/num_trials
              << left << setw(w) << count_sum/num_trials
+             << left << setw(w) << radix_sum/num_trials
              << endl;
 
     }
