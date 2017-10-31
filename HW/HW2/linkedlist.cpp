@@ -14,7 +14,7 @@ struct Node {
 };
 
 class LL {
-    Node* head;
+    Node *head, *tail;
 public:
     LL() : head() {}
     void addItem(Student* new_student){
@@ -40,6 +40,99 @@ public:
     }
 };
 
+Node* getTail(Node* head){
+    while(head->next) head = head->next;
+    return head;
+}
+
+Node *partition(Node *head, Node *end, Node **newHead, Node **newEnd, int order){
+    struct Node *pivot = end;
+    struct Node *prev = NULL, *cur = head, *tail = pivot;
+    // During partition, both the head and end of the list might change
+    // which is updated in the newHead and newEnd variables
+    if(order == 0){
+        while(cur != pivot){
+            if(cur->info->lastNameGreater(pivot->info)){
+                // If cur node is greater than pivot
+                // Move cur node to next of tail, and change tail
+                if(prev) prev->next = cur->next;
+                Node *tmp = cur->next;
+                cur->next = NULL;
+                tail->next = cur;
+                tail = cur;
+                cur = tmp;
+            } else {
+                // First node that has a value less than the pivot - becomes
+                // the new head
+                if(*newHead == NULL) *newHead = cur;
+                prev = cur;
+                cur = cur->next;
+            }
+        }
+    } else {
+        while(cur != pivot){
+            if(cur->info->lastNameGreater(pivot->info)){
+                // First node that has a value less than the pivot - becomes
+                // the new head
+                if(*newHead == NULL) *newHead = cur;
+                prev = cur;
+                cur = cur->next;
+            } else {
+                // If cur node is greater than pivot
+                // Move cur node to next of tail, and change tail
+                if(prev) prev->next = cur->next;
+                Node *tmp = cur->next;
+                cur->next = NULL;
+                tail->next = cur;
+                tail = cur;
+                cur = tmp;
+            }
+        }
+    }
+    // If the pivot data is the smallest element in the current list,
+    // pivot becomes the head
+    if(*newHead == NULL)
+        *newHead = pivot;
+    // Update newEnd to the current last node
+    *newEnd = tail;
+    // Return the pivot node
+    return pivot;
+}
+
+Node* quickSortRecur(Node *head, Node *end, int order){
+    // base condition
+    if(!head || head == end)
+        return head;
+    Node *newHead = NULL, *newEnd = NULL;
+    // Partition the list, newHead and newEnd will be updated
+    // by the partition function
+    Node *pivot = partition(head, end, &newHead, &newEnd, order);
+    // If pivot is the smallest element - no need to recur for
+    // the left part.
+    if(newHead != pivot){
+        // Set the node before the pivot node as NULL
+        Node *tmp = newHead;
+        while(tmp->next != pivot)
+            tmp = tmp->next;
+        tmp->next = NULL;
+        // Recur for the list before pivot
+        newHead = quickSortRecur(newHead, tmp, order);
+        // Change next of last node of the left half to pivot
+        tmp = getTail(newHead);
+        tmp->next = pivot;
+    }
+    // Recur for the list after the pivot element
+    pivot->next = quickSortRecur(pivot->next, newEnd, order);
+    return newHead;
+}
+
+// The main function for quick sort. This is a wrapper over recursive
+// function quickSortRecur()
+void quickSort(Node **headRef, int order=0){
+    *headRef = quickSortRecur(*headRef, getTail(*headRef), order);
+    return;
+}
+
 Node* SortedMerge(Node* a, Node* b, int order=0){
     Node* result = NULL;
 
@@ -52,26 +145,25 @@ Node* SortedMerge(Node* a, Node* b, int order=0){
     /* Pick either a or b, and recur */
     if(order == 0){     // descending order
         if (a->info->firstNameGreater(b->info)){
-            result = a;
-            result->next = SortedMerge(a->next, b);
-        } else {
             result = b;
             result->next = SortedMerge(a, b->next);
+        } else {
+            result = a;
+            result->next = SortedMerge(a->next, b);
         }
     } else {            // ascending order
         if (a->info->firstNameGreater(b->info)){
-            result = b;
-            result->next = SortedMerge(a, b->next, order);
-        } else {
             result = a;
             result->next = SortedMerge(a->next, b, order);
+        } else {
+            result = b;
+            result->next = SortedMerge(a, b->next, order);
         }
     }
     return result;
 }
 
-void halve(Node* source, Node** frontRef, Node** backRef)
-{
+void halve(Node* source, Node** frontRef, Node** backRef){
     Node* fast;
     Node* slow;
     if(source == NULL || source->next == NULL){
@@ -103,7 +195,7 @@ void MergeSort(Node** headRef, int order=0){
     Node* b;
 
     /* Base case -- length 0 or 1 */
-    if ((head == NULL) || (head->next == NULL)){
+    if((head == NULL) || (head->next == NULL)){
         return;
     }
 
@@ -118,6 +210,8 @@ void MergeSort(Node** headRef, int order=0){
     *headRef = SortedMerge(a, b, order);
 }
 
+
+
 LL generateStudents(int num_students){
     string name;
     vector<string> firstnames, lastnames;
@@ -125,6 +219,10 @@ LL generateStudents(int num_students){
     ifstream inFile;
     inFile.open("firstnames.txt");
     while( getline(inFile, name) ){
+        // clean string or else it screws up formatting
+        for(int i = 0; i < name.length(); i++){
+            if(!isalpha(name[i])) name[i] = ' ';
+        }
         firstnames.push_back(name);
     }
     inFile.close();
@@ -154,7 +252,8 @@ LL generateStudents(int num_students){
 int main(){
     LL students = generateStudents(10);
     students.display();
-    MergeSort(students.getHead());
+    quickSort(students.getHead(), 1);
     cout << "_______" << endl;
     students.display();
+
 }
