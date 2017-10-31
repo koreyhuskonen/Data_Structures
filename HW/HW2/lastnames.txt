@@ -1,10 +1,10 @@
-Curtis-taylor
+Curtis-Taylor
 Holmquist
 Kahin
 Salhanick
-Nascimento-silva
+Nascimento-Silva
 Ferrari
-O'hagan
+O’Hagan
 Ting
 Boppel
 Shallow
@@ -33,10 +33,10 @@ Mahanta
 Schluntz
 Sollee
 Escobedo
-Luna dela rosa
+Luna de la Rosa
 Chiappini
 Bilodeau
-Mcnicol
+McNicol
 Shanley
 Stigler
 Badulescu
@@ -50,7 +50,7 @@ Girone
 Thurman
 Carleton
 Fitzmaurice
-Mclaren
+McLaren
 Esquirol
 Levoff
 Stein
@@ -59,7 +59,7 @@ Nimmo
 Ho
 Ganong
 Marchant
-Mc clure
+McClure
 Kilson
 Vasquez
 Stroud
@@ -83,18 +83,20 @@ Hickman
 Marshall
 Petrioli
 Yoder
-O'gara
+O’Gara
 Dean
 Deinard
-Finley-moise
+Finley-Moise
 Newman
 Penn
 Barnard
 Mosso
+Franco
 Bowen
 Jeans
 Ostler
 Profio
+Nitin
 Keyes
 Krynick
 Behar

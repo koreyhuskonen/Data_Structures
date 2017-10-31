@@ -40,24 +40,34 @@ public:
     }
 };
 
-Node* SortedMerge(struct Node* a, struct Node* b){
+Node* SortedMerge(Node* a, Node* b, int order=0){
     Node* result = NULL;
 
     /* Base cases */
     if (a == NULL)
-     return(b);
+        return b;
     else if (b == NULL)
-     return(a);
+        return a;
 
     /* Pick either a or b, and recur */
-    if (a->info->firstNameGreater(b->info)){
-     result = a;
-     result->next = SortedMerge(a->next, b);
-    } else {
-     result = b;
-     result->next = SortedMerge(a, b->next);
+    if(order == 0){     // descending order
+        if (a->info->firstNameGreater(b->info)){
+            result = a;
+            result->next = SortedMerge(a->next, b);
+        } else {
+            result = b;
+            result->next = SortedMerge(a, b->next);
+        }
+    } else {            // ascending order
+        if (a->info->firstNameGreater(b->info)){
+            result = b;
+            result->next = SortedMerge(a, b->next, order);
+        } else {
+            result = a;
+            result->next = SortedMerge(a->next, b, order);
+        }
     }
-    return(result);
+    return result;
 }
 
 void halve(Node* source, Node** frontRef, Node** backRef)
@@ -87,7 +97,7 @@ void halve(Node* source, Node** frontRef, Node** backRef)
     }
 }
 
-void MergeSort(Node** headRef){
+void MergeSort(Node** headRef, int order=0){
     Node* head = *headRef;
     Node* a;
     Node* b;
@@ -101,11 +111,11 @@ void MergeSort(Node** headRef){
     halve(head, &a, &b);
 
     /* Recursively sort the sublists */
-    MergeSort(&a);
-    MergeSort(&b);
+    MergeSort(&a, order);
+    MergeSort(&b, order);
 
     /* answer = merge the two sorted lists together */
-    *headRef = SortedMerge(a, b);
+    *headRef = SortedMerge(a, b, order);
 }
 
 LL generateStudents(int num_students){
