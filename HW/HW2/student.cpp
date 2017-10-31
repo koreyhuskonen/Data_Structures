@@ -14,8 +14,8 @@ public:
     void display(){
         std::cout << "Name: " << std::left << std::setw(30) << getName() << "MNumber: " << getMNumber() << std::endl;
     }
-    bool firstNameGreater(Student& s){return FirstName > s.getFirstName();}
-    bool lastNameGreater(Student& s){return LastName > s.getLastName();}
-    bool mnumNameGreater(Student& s){return MNumber > s.getMNumber();}
+    bool firstNameGreater(Student* s){return FirstName > s->getFirstName();}
+    bool lastNameGreater(Student* s){return LastName > s->getLastName();}
+    bool mnumNameGreater(Student* s){return MNumber > s->getMNumber();}
 
 };
