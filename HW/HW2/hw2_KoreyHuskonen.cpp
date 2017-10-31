@@ -31,6 +31,8 @@ int main(){
             int test[num_algos][size];
             for(int i = 0; i < size; i++){
                 int temp = rand() % (2*size+1);
+                // int temp = rand() % (size*size);
+
                 for(int k = 0; k < num_algos; k++){
                     test[k][i] = temp;
                 }
