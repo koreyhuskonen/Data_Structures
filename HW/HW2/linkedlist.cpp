@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <sstream>
 #include "student.cpp"
 
 using namespace std;
@@ -141,7 +142,6 @@ Node* SortedMerge(Node* a, Node* b, int order=0){
         return b;
     else if (b == NULL)
         return a;
-
     /* Pick either a or b, and recur */
     if(order == 0){     // descending order
         if (a->info->firstNameGreater(b->info)){
@@ -193,43 +193,53 @@ void MergeSort(Node** headRef, int order=0){
     Node* head = *headRef;
     Node* a;
     Node* b;
-
     /* Base case -- length 0 or 1 */
     if((head == NULL) || (head->next == NULL)){
         return;
     }
-
     /* Split head into 'a' and 'b' halves */
     halve(head, &a, &b);
-
     /* Recursively sort the sublists */
     MergeSort(&a, order);
     MergeSort(&b, order);
-
     /* answer = merge the two sorted lists together */
     *headRef = SortedMerge(a, b, order);
 }
 
-void sortedInsert(Node** head, Node* curr){
-    if(!(*head) || (*head)->info->mnumNameGreater(curr->info)){
-        curr->next = *head;
-        *head = curr;
-    } else {
-        Node* temp = *head;
-        while(temp->next && curr->info->mnumNameGreater(temp->next->info)){
-            temp = temp->next;
+void sortedInsert(Node** head, Node* curr, int order=0){
+    if(order == 0){
+        if(!(*head) || (*head)->info->mnumNameGreater(curr->info)){
+            curr->next = *head;
+            *head = curr;
+        } else {
+            Node* temp = *head;
+            while(temp->next && curr->info->mnumNameGreater(temp->next->info)){
+                temp = temp->next;
+            }
+            curr->next = temp->next;
+            temp->next = curr;
         }
-        curr->next = temp->next;
-        temp->next = curr;
+    } else {
+        if(!(*head) || curr->info->mnumNameGreater((*head)->info)){
+            curr->next = *head;
+            *head = curr;
+        } else {
+            Node* temp = *head;
+            while(temp->next && temp->next->info->mnumNameGreater(curr->info)){
+                temp = temp->next;
+            }
+            curr->next = temp->next;
+            temp->next = curr;
+        }
     }
 }
 
-void insertionSort(Node** head){
+void insertionSort(Node** head, int order=0){
     Node *current = *head, *sorted = NULL;
     while(current){
-        Node* temp = current->next;
-        sortedInsert(&sorted, current);
-        current = temp;
+        Node* next = current->next;
+        sortedInsert(&sorted, current, order);
+        current = next;
     }
     *head = sorted;
 }
@@ -254,16 +264,16 @@ LL generateStudents(int num_students){
     }
     inFile.close();
     LL students;
-    // generate random students and add them to linked list
+    // generate random students and add them to linked list *students*
     srand(time(0));
     for(int j = 0; j < num_students; j++){
         string firstname, lastname, mnum;
         int i = rand() % firstnames.size();
-        firstname = firstnames[i];
+        firstname = firstnames[i];      // get random first name
         i = rand() % lastnames.size();
-        lastname = lastnames[i];
+        lastname = lastnames[i];        // get random last name
         i = rand() % 100000000;
-        mnum = 'M' + to_string(i);
+        mnum = 'M' + to_string(i);      // create random MNumber
         while(mnum.length() < 9) mnum += '0'; // Make sure MNumber is 9 characters
         Student* new_student = new Student(firstname, lastname, mnum);
         students.addItem(new_student);
@@ -272,10 +282,51 @@ LL generateStudents(int num_students){
 }
 
 int main(){
-    LL students = generateStudents(10);
-    students.display();
-    insertionSort(students.getHead());
-    cout << "_______" << endl;
-    students.display();
+    cout << "\n"
+            " _\\/_                 |                _\\/_\n"
+            " /o\\\\             \\       /            //o\\\n"
+            "  |                 .---.                |\n"
+            "__|_______     --  /     \\  --     ______|__\n"
+            "          `~^~^~^~^~^~^~^~^~^~^~^~`\n"
+            "      The Ultimate Student Linked List\n";
+    cout << "\nHow many students do you wish to be in this list? ";
+    string input;
+    int num;
+    getline(cin, input);
+    stringstream(input) >> num;
+    LL students = generateStudents(num);
 
+    while(true){
+        cout << "\n***** Menu *****\n"
+             << "1. Display\n"
+             << "2. Sort by First Name\n"
+             << "3. Sort by Last Name\n"
+             << "4. Sort by MNumber\n"
+             << "5. Exit\n";
+        do {
+            cin.clear();
+            cout << "Enter your choice: ";
+            getline(cin, input);
+            stringstream(input) >> num;
+        } while(num < 1 || num > 5);
+
+        if(num == 5){
+            cout << "\nGoodbye!\n\n";
+            break;
+        } else if(num == 1){
+            students.display();
+        } else {
+            int order;
+            do {
+                cout << "Ascending (1) or Descending (2) order? ";
+                getline(cin, input);
+                stringstream(input) >> order;
+            } while(order < 1 || order > 2);
+
+            if(num == 2) MergeSort(students.getHead(), order-1);
+            else if(num == 3) quickSort(students.getHead(), order-1);
+            else insertionSort(students.getHead(), order-1);
+            cout << "\nThe list has been sorted\n";
+        }
+    }
 }
