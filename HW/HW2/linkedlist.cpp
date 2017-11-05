@@ -210,7 +210,29 @@ void MergeSort(Node** headRef, int order=0){
     *headRef = SortedMerge(a, b, order);
 }
 
+void sortedInsert(Node** head, Node* curr){
+    if(!(*head) || (*head)->info->mnumNameGreater(curr->info)){
+        curr->next = *head;
+        *head = curr;
+    } else {
+        Node* temp = *head;
+        while(temp->next && curr->info->mnumNameGreater(temp->next->info)){
+            temp = temp->next;
+        }
+        curr->next = temp->next;
+        temp->next = curr;
+    }
+}
 
+void insertionSort(Node** head){
+    Node *current = *head, *sorted = NULL;
+    while(current){
+        Node* temp = current->next;
+        sortedInsert(&sorted, current);
+        current = temp;
+    }
+    *head = sorted;
+}
 
 LL generateStudents(int num_students){
     string name;
@@ -252,7 +274,7 @@ LL generateStudents(int num_students){
 int main(){
     LL students = generateStudents(10);
     students.display();
-    quickSort(students.getHead(), 1);
+    insertionSort(students.getHead());
     cout << "_______" << endl;
     students.display();
 
