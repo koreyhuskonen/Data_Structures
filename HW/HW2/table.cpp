@@ -21,7 +21,7 @@ int main(){
          << left << setw(w) << "Heap"
          << endl;
 
-    int num_algos = 8, num_trials = 10, sizes[5] = {10,100,500,5000,25000};
+    int num_algos = 8, num_trials = 20, sizes[5] = {10,100,500,5000,25000};
     unsigned long long bubble_sum, insertion_sum, selection_sum, merge_sum, quick_sum,
                        count_sum, radix_sum, heap_sum;
     for(int x = 0; x < 5; x++){
@@ -105,5 +105,6 @@ int main(){
              << endl;
 
     }
+    cout << "Trials: " << num_trials << endl;
 
 }
